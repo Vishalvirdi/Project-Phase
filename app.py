@@ -34,7 +34,7 @@ def analyze_image():
         pil_image.save(buffer, format="JPEG")
         encoded_image = buffer.getvalue().decode('base64')
 
-    return jsonify({'colony_count': colony_count, 'processed_image': encoded_image})
+    return jsonify({'colony_count': colony_count})
 
 def process_image(image):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
