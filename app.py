@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import cv2
 import numpy as np
+import base64
 from io import BytesIO
 from PIL import Image
 
@@ -10,29 +11,30 @@ min_colony_area = 100
 
 @app.route('/', methods=['POST'])
 def analyze_image():
-
+    # Check if image data is present in the request
     if 'image' not in request.files:
         return jsonify({'error': 'No image file provided'}), 400
 
-    uploaded_image = request.files['image']
+    # Read the image data from the request
+    image_file = request.files['image']
 
-    allowed_extensions = {'jpg', 'jpeg', 'png'}
-    if uploaded_image.filename.split('.')[-1].lower() not in allowed_extensions:
-        return jsonify({'error': 'Invalid file extension. Only JPG, JPEG, and PNG are supported'}), 400
-
-    # Process the image with OpenCV
-    image_data = uploaded_image.read()
-    nparr = np.fromstring(image_data, np.uint8)
+    # Convert image data to OpenCV format
+    nparr = np.frombuffer(image_file.read(), np.uint8)
     image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+    if image is None:
+        return jsonify({'error': 'Failed to read image'}), 400
 
     colony_count = process_image(image)
 
-    # Encode processed image (assuming processing involves drawing on the image)
+    # Process the image
     processed_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # Convert for PIL
     pil_image = Image.fromarray(processed_image)
-    with BytesIO() as buffer:
-        pil_image.save(buffer, format="JPEG")
-        encoded_image = buffer.getvalue()  # Remove unnecessary decode
+
+    # Convert PIL image to base64 string
+    buffer = BytesIO()
+    pil_image.save(buffer, format="JPEG")
+    encoded_image = base64.b64encode(buffer.getvalue()).decode('utf-8')
 
     return jsonify({'colony_count': colony_count, 'processed_image': encoded_image})
 
