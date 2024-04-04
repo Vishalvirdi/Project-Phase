@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 min_colony_area = 100
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['POST','GET'])
 def analyze_image():
     # Check if image data is present in the request
     if 'image' not in request.files:
