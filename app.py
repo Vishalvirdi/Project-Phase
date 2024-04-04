@@ -7,6 +7,12 @@ app = Flask(__name__)
 
 min_colony_area = 100
 
+    
+@app.route('/hello', methods=['GET'])
+def get():
+    res.send("hello")
+
+
 @app.route('/', methods=['POST'])
 def analyze_image():
 
@@ -45,10 +51,7 @@ def analyze_image():
     
     
     
-    
-@app.route('/', methods=['GET'])
-def get():
-    res.send("hello")
+
     
 
 if __name__ == '__main__':
