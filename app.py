@@ -11,11 +11,12 @@ min_colony_area = 100
 @app.route('/', methods=['POST','GET'])
 def analyze_image():
 
-    if 'image' not in request.files:
+    data = request.data
+
+    if 'image' not in data['image'].files:
         return jsonify({'error': 'No image file provided'}), 400
 
-    uploaded_image = request.files['image']
-
+    uploaded_image = data['image'].files['image']
     allowed_extensions = {'jpg', 'jpeg', 'png'}
     if uploaded_image.filename.split('.')[-1].lower() not in allowed_extensions:
         return jsonify({'error': 'Invalid file extension. Only JPG, JPEG, and PNG are supported'}), 400
