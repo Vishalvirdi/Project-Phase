@@ -42,7 +42,7 @@ def analyze_image():
             colony_count += 1
     
     # return jsonify({'colony_count': colony_count})
-    return  res.send("hello hotel")
+    res.send("hello hotel")
 
 if __name__ == '__main__':
     app.run(debug=True)
