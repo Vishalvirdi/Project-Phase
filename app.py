@@ -41,8 +41,15 @@ def analyze_image():
         if area > min_colony_area:
             colony_count += 1
     
-    # return jsonify({'colony_count': colony_count})
-    res.send("hello hotel")
+    return jsonify({'colony_count': colony_count})
+    
+    
+    
+    
+@app.route('/', methods=['GET'])
+def get():
+    res.send("hello")
+    
 
 if __name__ == '__main__':
     app.run(debug=True)
