@@ -40,8 +40,9 @@ def analyze_image():
         area = cv2.contourArea(contour)
         if area > min_colony_area:
             colony_count += 1
-
-    return jsonify({'colony_count': colony_count})
+    
+    # return jsonify({'colony_count': colony_count})
+    return  res.send("hello hotel")
 
 if __name__ == '__main__':
     app.run(debug=True)
