@@ -1,14 +1,14 @@
 from flask import Flask, request, jsonify
 import cv2
 import numpy as np
-import io  # Use io instead of BytesIO (compatible with Lambda)
-from PIL import Image  # Assuming Pillow is available in the Lambda Layer
+from io import BytesIO
+from PIL import Image
 
 app = Flask(__name__)
 
 min_colony_area = 100
 
-@app.route('/', methods=['POST', 'GET'])
+@app.route('/', methods=['POST'])
 def analyze_image():
 
     if 'image' not in request.files:
@@ -30,11 +30,11 @@ def analyze_image():
     # Encode processed image (assuming processing involves drawing on the image)
     processed_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # Convert for PIL
     pil_image = Image.fromarray(processed_image)
-    with io.BytesIO() as buffer:
+    with BytesIO() as buffer:
         pil_image.save(buffer, format="JPEG")
-        encoded_image = buffer.getvalue().decode('base64')
+        encoded_image = buffer.getvalue()  # Remove unnecessary decode
 
-    return jsonify({'colony_count': colony_count})
+    return jsonify({'colony_count': colony_count, 'processed_image': encoded_image})
 
 def process_image(image):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
