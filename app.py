@@ -8,10 +8,9 @@ app = Flask(__name__)
 min_colony_area = 100
 
     
-@app.route('/hello', methods=['GET'])
+@app.route('/', methods=['GET'])
 def get():
-    res.send("hello")
-
+    return jsonify({"message": "Hello from the root!"})
 
 # @app.route('/', methods=['POST'])
 # def analyze_image():
